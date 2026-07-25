@@ -15,7 +15,7 @@ Test route: POST http://localhost:5000/extract-skills  (via Postman, body: form-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PyPDF2 import PdfReader
-
+ 
 app = Flask(__name__)
 CORS(app)  # allows Dev V's Node.js backend to call this service
 
