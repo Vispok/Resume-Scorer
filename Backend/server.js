@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+
 dotenv.config();
 
 const app = express();
@@ -13,6 +14,10 @@ app.use(cors({
     origin: "http://localhost:3000"
 }))
 
+app.post("/submit",(req,res)=>{
+    
+})
+
 app.get("/",(req,res)=>{
     res.json({
         success: true,
@@ -22,12 +27,6 @@ app.get("/",(req,res)=>{
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-
-app.post("/jobs",(req,res)=>{
-    console.log(req.body);
-
-    const job = new job
-})
 
 app.listen(port,()=>{
     console.log(`Server is Running on http://localhost:${port}`);
