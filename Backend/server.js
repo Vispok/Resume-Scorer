@@ -78,8 +78,6 @@ app.get("/",(req,res)=>{
     });
 })
 
-
-
 app.listen(port,()=>{
     console.log(`Server is Running on http://localhost:${port}`);
 })

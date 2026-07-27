@@ -22,14 +22,12 @@ CORS(app)  # allows Node.js backend to call this service
 MAX_FILE_SIZE_MB = 5
 ALLOWED_EXTENSION = ".pdf"
 
-
 @app.route("/", methods=["GET"])
 def home():
     """Simple health check route - open this in browser to confirm server is alive."""
     return jsonify({"message": "Resume Analyzer (Python service) is running"})
 
-
-@app.route("/extract-skills", methods=["http://localhost:5000/extract-skills"])
+@app.route("/extract-skills", methods=["POST"])
 def extract_skills():
     """
     Accepts a PDF resume, extracts raw text from it.
@@ -40,16 +38,18 @@ def extract_skills():
     if "resume" not in request.files:
         return jsonify({"status": "error", "message": "No file uploaded. Send it under key 'resume'."}), 400
 
-    file = request.files["Priyanshu_Singh_resume.pdf"]
+    file = request.files["resume"]
 
     if file.filename == "":
         return jsonify({"status": "error", "message": "No file selected."}), 400
 
     # 2. Validate file extension
+
     if not file.filename.lower().endswith(ALLOWED_EXTENSION):
         return jsonify({"status": "error", "message": "Only PDF files are allowed."}), 400
 
     # 3. Validate file size (read into memory once, check size, then rewind)
+
     file.seek(0, 2)  # move pointer to end of file
     size_mb = file.tell() / (1024 * 1024)
     file.seek(0)  # rewind pointer back to start before reading
@@ -57,6 +57,7 @@ def extract_skills():
         return jsonify({"status": "error", "message": f"File too large. Max {MAX_FILE_SIZE_MB}MB allowed."}), 400
 
     # 4. Try extracting text from the PDF
+
     try:
         reader = PdfReader(file)
 
