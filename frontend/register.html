@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-tabs">
+        <button class="tab-btn"
+            onclick="window.location.href='login.html'">
+            Login
+        </button>
+
+        <button class="tab-btn active"
+            onclick="window.location.href='register.html'">
+            Register
+        </button>
+    </div>
+
+    <h2>Register</h2>
+
+    <div class="input-box">
+        <label>Email / Phone Number</label>
+        <input type="text" id="username" placeholder="Enter Email or Phone">
+    </div>
+
+    <div class="input-box">
+        <label>Select User Type</label>
+
+        <select id="userType">
+            <option value="">-- Select User Type --</option>
+            <option value="admin">Admin</option>
+            <option value="candidate">Candidate</option>
+        </select>
+    </div>
+
+    <div class="input-box password-box">
+        <label>New Password</label>
+        <input type="password" id="newPassword" placeholder="Enter New Password">
+
+        <button type="button" onclick="togglePassword('newPassword', this)">
+            Show
+        </button>
+    </div>
+
+    <div class="input-box password-box">
+        <label>Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+
+        <button type="button" onclick="togglePassword('confirmPassword', this)">
+            Show
+        </button>
+    </div>
+
+    <button onclick="window.location.href='profile.html'" class="auth-btn register-btn"
+        onclick="registerUser()">
+        Register 
+    </button>
+
+    <p id="message"></p>
+
+</div>
+
+<script>
+
+
+function togglePassword(id, btn) {
+
+    let field = document.getElementById(id);
+
+    if(field.type === "password"){
+
+        field.type = "text";
+        btn.innerHTML = "Hide";
+
+    }
+
+    else{
+
+        field.type = "password";
+        btn.innerHTML = "Show";
+
+    }
+
+}
+
+function registerUser(){
+
+    let username = document.getElementById("username").value.trim();
+
+    let role = document.getElementById("userType").value;
+
+    let password = document.getElementById("newPassword").value.trim();
+
+    let confirm = document.getElementById("confirmPassword").value.trim();
+
+    let captcha = document.getElementById("captchaInput").value.trim();
+
+    let msg = document.getElementById("message");
+
+    if(username === "" || role === "" || password === "" || confirm === ""){
+
+        msg.className = "error";
+        msg.innerHTML = "Please fill all fields.";
+
+        return;
+
+    }
+
+    if(password !== confirm){
+
+        msg.className = "error";
+        msg.innerHTML = "Passwords do not match.";
+
+        return;
+
+    }
+
+    
+
+    msg.className = "success";
+    msg.innerHTML = "Registration Successful!";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+<div class="container"> 
+
+    <div class="form-tabs">
+        <button class="tab-btn active"
+            onclick="window.location.href='login.html'">
+            Login
+        </button>
+
+        <button class="tab-btn"
+            onclick="window.location.href='register.html'">
+            Register
+        </button>
+    </div>
+
+    <h2>Login</h2>
+
+
+    <div class="input-box"> 
+        <label>Email / Phone Number</label>
+        <input type="text" id="username" placeholder="Enter Email or Phone">
+    </div>
+
+
+    <div class="input-box password-box">  
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter Password">
+        <button type="button" onclick="togglePassword()">Show</button>
+    </div>
+
+    <div class="captcha-area">
+        <div class="captcha" id="captcha"></div>
+        <button type="button" class="refresh" onclick="generateCaptcha()">↻</button>
+    </div> 
+
+    <div class="input-box">
+        <label>Enter CAPTCHA</label>
+        <input type="text" id="captchaInput" placeholder="Type CAPTCHA">
+    </div>
+
+    <button class="auth-btn login-btn" onclick="login()">Login</button>
+
+
+    <p id="message"></p>
+
+</div>
+
+<script>
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let phonePattern = /^[6-9]\d{9}$/;
+    let passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+let captchaText = "";
+
+function generateCaptcha() {
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    captchaText = "";
+
+    for (let i = 0; i < 6; i++) {
+        captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    document.getElementById("captcha").innerHTML = captchaText;
+}
+
+generateCaptcha();
+
+function togglePassword() {
+
+    let pass = document.getElementById("password");
+    let btn = document.querySelector(".password-box button");
+
+    if (pass.type === "password") {
+        pass.type = "text";
+        btn.innerHTML = "Hide";
+    } else {
+        pass.type = "password";
+        btn.innerHTML = "Show";
+    }
+}
+
+function login() {
+
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value.trim();
+    let captcha = document.getElementById("captchaInput").value.trim();
+
+    let msg = document.getElementById("message");
+
+  
+    if (user === "" || pass === "") {
+        msg.className = "error";
+        msg.innerHTML = "Please fill all fields.";
+        return;
+    }
+      if(!(emailPattern.test(user) || phonePattern.test(user))){
+    msg.className="error";
+    msg.innerHTML="Enter a valid Email or Phone Number.";
+    return;
+}
+
+
+    if (captcha !== captchaText) {
+
+        msg.className = "error";
+        msg.innerHTML = "Incorrect CAPTCHA.";
+
+        generateCaptcha();
+        document.getElementById("captchaInput").value = "";
+
+        return;
+    }
+    if(!passwordPattern.test(pass)){
+    msg.className="error";
+    msg.innerHTML="Password must contain uppercase, lowercase, number and special character.";
+    return;
+}
+  if(pass.length < 8){
+    msg.className="error";
+    msg.innerHTML="Password must be at least 8 characters.";
+    return;
+}
+
+
+    // Dummy credentials validation
+    msg.className = "success";
+    msg.innerHTML = "Login Successful!";
+}
+
+</script>
+
+</body>
+</html>
