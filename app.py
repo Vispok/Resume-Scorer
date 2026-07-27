@@ -1,6 +1,6 @@
 """
 Resume Analyzer - Python/Flask microservice (Dev P's part)
-Week 2: PDF upload + text extraction
+PDF upload + text extraction
 
 Run:
     python -m venv venv
@@ -17,7 +17,7 @@ from flask_cors import CORS
 from PyPDF2 import PdfReader
  
 app = Flask(__name__)
-CORS(app)  # allows Dev V's Node.js backend to call this service
+CORS(app)  # allows Node.js backend to call this service
 
 MAX_FILE_SIZE_MB = 5
 ALLOWED_EXTENSION = ".pdf"
@@ -32,7 +32,7 @@ def home():
 @app.route("/extract-skills", methods=["http://localhost:5000/extract-skills"])
 def extract_skills():
     """
-    Week 2: Accepts a PDF resume, extracts raw text from it.
+    Accepts a PDF resume, extracts raw text from it.
     Postman setup: POST request, Body -> form-data, key = "resume", type = File, value = pick a PDF.
     """
 
@@ -80,7 +80,7 @@ def extract_skills():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Failed to read PDF: {str(e)}"}), 400
 
-    # Week 3 mein yahan se skill matching start hogi.
+    # yahan se skill matching start hogi.
     # Abhi ke liye raw text ka proof dikha rahe hain (preview + length).
     return jsonify({
         "status": "success",
