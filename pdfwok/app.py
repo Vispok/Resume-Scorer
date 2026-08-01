@@ -1,17 +1,3 @@
-"""
-Resume Analyzer - Python/Flask microservice (Dev P's part)
-PDF upload + text extraction
-
-Run:
-    python -m venv venv
-    venv\\Scripts\\activate   (Windows) OR source venv/bin/activate (Mac/Linux)
-    pip install -r requirements.txt
-    python app.py
-
-Server runs on: http://localhost:5000
-Test route: POST http://localhost:5000/extract-skills  (via Postman, body: form-data, key "resume", type File)
-"""
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PyPDF2 import PdfReader
@@ -43,12 +29,10 @@ def extract_skills():
     if file.filename == "":
         return jsonify({"status": "error", "message": "No file selected."}), 400
 
-    # 2. Validate file extension
 
     if not file.filename.lower().endswith(ALLOWED_EXTENSION):
         return jsonify({"status": "error", "message": "Only PDF files are allowed."}), 400
 
-    # 3. Validate file size (read into memory once, check size, then rewind)
 
     file.seek(0, 2)  # move pointer to end of file
     size_mb = file.tell() / (1024 * 1024)
@@ -56,7 +40,6 @@ def extract_skills():
     if size_mb > MAX_FILE_SIZE_MB:
         return jsonify({"status": "error", "message": f"File too large. Max {MAX_FILE_SIZE_MB}MB allowed."}), 400
 
-    # 4. Try extracting text from the PDF
 
     try:
         reader = PdfReader(file)
@@ -81,8 +64,6 @@ def extract_skills():
     except Exception as e:
         return jsonify({"status": "error", "message": f"Failed to read PDF: {str(e)}"}), 400
 
-    # yahan se skill matching start hogi.
-    # Abhi ke liye raw text ka proof dikha rahe hain (preview + length).
     return jsonify({
         "status": "success",
         "text_length": len(raw_text),

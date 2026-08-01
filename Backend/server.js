@@ -12,12 +12,13 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
-const upload = multer({dest :"uploads/"})
+
+const upload = multer({ dest: "uploads/" })
 
 app.use(morgan("combined"));
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 //To talk with Frontend
 
@@ -27,11 +28,11 @@ app.use(cors({
 
 //Get the Resume PDF
 
-app.post("/upload",upload.single("resume"),async(req,res)=>{
+app.post("/upload", upload.single("resume"), async (req, res) => {
     try {
-        if(!req.file){
+        if (!req.file) {
             return res.status(400).json({ success: false, message: "No file uploaded" });
-        
+
         }
         console.log(req.file);
         const form = new FormData();
@@ -62,8 +63,8 @@ app.post("/upload",upload.single("resume"),async(req,res)=>{
         console.error(error);
         res.status(500).json({ success: false, message: "Failed to process resume" });
     }
-    finally{
-        if(req.file){
+    finally {
+        if (req.file) {
             fs.unlink(req.file.path, (err) => {
                 if (err) console.error("Failed to delete temp file:", err);
             });
@@ -71,13 +72,13 @@ app.post("/upload",upload.single("resume"),async(req,res)=>{
     }
 })
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.json({
         success: true,
         message: "Resume Scorer API is running"
     });
 })
 
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`Server is Running on http://localhost:${port}`);
 })
