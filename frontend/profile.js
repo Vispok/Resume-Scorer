@@ -21,7 +21,7 @@ document.getElementById("fileUpload").addEventListener("change", function(){
 
     if(!file) return;
 
-    const maxSize = 3 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024;
 
     if(file.size > maxSize){
 

@@ -83,6 +83,7 @@ def extract_skills():
 
     # yahan se skill matching start hogi.
     # Abhi ke liye raw text ka proof dikha rahe hain (preview + length).
+
     return jsonify({
         "status": "success",
         "text_length": len(raw_text),
@@ -94,11 +95,9 @@ def extract_skills():
 def not_found(e):
     return jsonify({"status": "error", "message": "Route not found"}), 404
 
-
 @app.errorhandler(500)
 def server_error(e):
     return jsonify({"status": "error", "message": "Internal server error"}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
