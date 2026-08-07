@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1785860496357",
+    "username": "asdfghj@gmail.com",
+    "role": "recruiter",
+    "passwordHash": "$2b$12$O82k.KfE0oyhp2M1SFqSNudPAjR1j/yuJ9MGbov2UkmZHG21SgfAW",
+    "profile": {
+      "name": "xcvbnm,bvcvb",
+      "email": "xyzz@gmail.com",
+      "phone": "8989898989",
+      "gender": "Other",
+      "dob": "2026-08-01"
+    },
+    "resume": null,
+    "createdAt": "2026-08-04T16:21:36.357Z"
+  },
+  {
+    "id": "1786090080991",
+    "username": "chandan@gmail.com",
+    "role": "candidate",
+    "passwordHash": "$2b$12$4y.cWsJlVb6KSMrVkTkDaOzwvb.dFlvEzxz.xQxZo2e8ctN7uELWK",
+    "profile": {
+      "name": "sdfghjhgfdsa",
+      "email": "ansari@admin.com",
+      "phone": "9876534567",
+      "gender": "Male",
+      "dob": "2026-07-31"
+    },
+    "resume": {
+      "originalName": "202507090859491452.pdf",
+      "storedName": "1786090316984-202507090859491452.pdf",
+      "size": 227804,
+      "uploadedAt": "2026-08-07T08:11:56.998Z"
+    },
+    "createdAt": "2026-08-07T08:08:00.991Z"
+  }
+]

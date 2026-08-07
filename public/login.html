@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <link
+        rel="stylesheet"
+        href="login.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="form-tabs">
+
+        <button
+            class="tab-btn active"
+            type="button">
+
+            Login
+
+        </button>
+
+
+        <button
+            class="tab-btn"
+            type="button"
+            onclick="window.location.href='register.html'">
+
+            Register
+
+        </button>
+
+    </div>
+
+
+    <h2>Login</h2>
+
+
+    <div class="input-box">
+
+        <label>
+            Email / Phone Number
+        </label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter Email or Phone">
+
+    </div>
+
+
+    <div class="input-box password-box">
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter Password">
+
+        <button
+            type="button"
+            onclick="togglePassword()">
+
+            Show
+
+        </button>
+
+    </div>
+
+
+    <div class="captcha-area">
+
+        <div
+            class="captcha"
+            id="captcha">
+        </div>
+
+
+        <button
+            type="button"
+            class="refresh"
+            onclick="generateCaptcha()">
+
+            ↻
+
+        </button>
+
+    </div>
+
+
+    <div class="input-box">
+
+        <label>
+            Enter CAPTCHA
+        </label>
+
+        <input
+            type="text"
+            id="captchaInput"
+            placeholder="Type CAPTCHA">
+
+    </div>
+
+
+    <button
+        class="auth-btn login-btn"
+        type="button"
+        onclick="login()">
+
+        Login
+
+    </button>
+
+
+    <p id="message"></p>
+
+
+</div>
+
+
+<script>
+
+
+const emailPattern =
+/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+const phonePattern =
+/^[6-9]\d{9}$/;
+
+
+let captchaText = "";
+
+
+
+function generateCaptcha() {
+
+
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+
+    captchaText = "";
+
+
+    for (
+        let i = 0;
+        i < 6;
+        i++
+    ) {
+
+        captchaText +=
+            chars.charAt(
+                Math.floor(
+                    Math.random() *
+                    chars.length
+                )
+            );
+
+    }
+
+
+    document
+    .getElementById("captcha")
+    .innerHTML =
+        captchaText;
+
+}
+
+
+
+generateCaptcha();
+
+
+
+function togglePassword() {
+
+
+    const pass =
+        document
+        .getElementById("password");
+
+
+    const btn =
+        document
+        .querySelector(
+            ".password-box button"
+        );
+
+
+    if (
+        pass.type ===
+        "password"
+    ) {
+
+        pass.type =
+            "text";
+
+        btn.innerHTML =
+            "Hide";
+
+    }
+
+    else {
+
+        pass.type =
+            "password";
+
+        btn.innerHTML =
+            "Show";
+
+    }
+
+}
+
+
+
+async function login() {
+
+
+    const username =
+        document
+        .getElementById("username")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const captcha =
+        document
+        .getElementById("captchaInput")
+        .value
+        .trim();
+
+
+    const msg =
+        document
+        .getElementById("message");
+
+
+
+    if (
+        username === "" ||
+        password === "" ||
+        captcha === ""
+    ) {
+
+        msg.className =
+            "error";
+
+        msg.innerHTML =
+            "Please fill all fields.";
+
+        return;
+
+    }
+
+
+
+    if (
+        !emailPattern.test(username) &&
+        !phonePattern.test(username)
+    ) {
+
+        msg.className =
+            "error";
+
+        msg.innerHTML =
+            "Enter valid Email or Phone Number.";
+
+        return;
+
+    }
+
+
+
+    if (
+        captcha !==
+        captchaText
+    ) {
+
+        msg.className =
+            "error";
+
+        msg.innerHTML =
+            "Incorrect CAPTCHA.";
+
+
+        generateCaptcha();
+
+
+        document
+        .getElementById(
+            "captchaInput"
+        )
+        .value = "";
+
+
+        return;
+
+    }
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/login",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            username,
+
+                            password
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+
+        if (!response.ok) {
+
+            msg.className =
+                "error";
+
+            msg.innerHTML =
+                data.message;
+
+            generateCaptcha();
+
+            return;
+
+        }
+
+
+
+        msg.className =
+            "success";
+
+
+        msg.innerHTML =
+            "Login Successful!";
+
+
+        setTimeout(
+            function () {
+
+                window.location.href =
+                    "userdata.html";
+
+            },
+
+            500
+        );
+
+
+    }
+
+    catch (error) {
+
+        msg.className =
+            "error";
+
+        msg.innerHTML =
+            "Server connection failed.";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

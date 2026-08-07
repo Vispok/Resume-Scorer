@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>Job Offer Form</title>
+
+<link
+    rel="stylesheet"
+    href="recruiter.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>Job Offer Form</h1>
+
+
+<form id="jobForm">
+
+
+<div class="input-box">
+
+<label>Job Type</label>
+
+<input
+    type="text"
+    name="jobType"
+    placeholder="e.g. Frontend Developer"
+    required>
+
+</div>
+
+
+<div class="input-box">
+
+<label>
+Competencies Required
+</label>
+
+<textarea
+    name="competencies"
+    placeholder="HTML, CSS, JavaScript, React..."
+    required>
+</textarea>
+
+</div>
+
+
+<div class="input-box">
+
+<label>
+About the Job
+</label>
+
+<textarea
+    name="aboutJob"
+    placeholder="Describe role and responsibilities"
+    required>
+</textarea>
+
+</div>
+
+
+<div class="input-box">
+
+<label>Duration</label>
+
+<input
+    type="text"
+    name="duration"
+    placeholder="6 Months / Permanent"
+    required>
+
+</div>
+
+
+<div class="input-box">
+
+
+<label>Work Type</label>
+
+
+<div class="radio-group">
+
+
+<label>
+
+<input
+    type="radio"
+    name="workType"
+    value="Remote"
+    required>
+
+Remote
+
+</label>
+
+
+<label>
+
+<input
+    type="radio"
+    name="workType"
+    value="Full Time">
+
+Full Time
+
+</label>
+
+
+<label>
+
+<input
+    type="radio"
+    name="workType"
+    value="Hybrid">
+
+Hybrid
+
+</label>
+
+
+</div>
+
+</div>
+
+
+<div class="input-box">
+
+<label>
+Working Hours
+</label>
+
+<input
+    type="text"
+    name="workingHours"
+    placeholder="9 AM - 6 PM"
+    required>
+
+</div>
+
+
+<div class="input-box">
+
+<label>
+Payment / Salary
+</label>
+
+<input
+    type="text"
+    name="salary"
+    placeholder="₹50,000/month"
+    required>
+
+</div>
+
+
+<div class="input-box">
+
+<label>
+Upload Offer PDF
+</label>
+
+<input
+    type="file"
+    name="offerPdf"
+    accept=".pdf">
+
+</div>
+
+
+<button type="submit">
+
+Post Job
+
+</button>
+
+
+<p id="message"></p>
+
+
+</form>
+
+
+</div>
+
+
+<script>
+
+
+async function checkRecruiter() {
+
+
+    const response =
+        await fetch(
+            "/api/profile"
+        );
+
+
+    if (
+        response.status ===
+        401
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (
+        data.role !==
+        "recruiter"
+    ) {
+
+        window.location.href =
+            "profile.html";
+
+    }
+
+}
+
+
+
+document
+.getElementById("jobForm")
+.addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+        const formData =
+            new FormData(this);
+
+
+        const msg =
+            document
+            .getElementById(
+                "message"
+            );
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/api/jobs",
+                    {
+
+                        method:
+                            "POST",
+
+                        body:
+                            formData
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+
+            if (!response.ok) {
+
+                msg.className =
+                    "error";
+
+                msg.innerHTML =
+                    data.message;
+
+                return;
+
+            }
+
+
+
+            msg.className =
+                "success";
+
+
+            msg.innerHTML =
+                data.message;
+
+
+            this.reset();
+
+
+        }
+
+        catch (error) {
+
+
+            msg.className =
+                "error";
+
+
+            msg.innerHTML =
+                "Unable to post job.";
+
+
+        }
+
+
+    }
+);
+
+
+
+checkRecruiter();
+
+
+</script>
+
+
+</body>
+
+</html>

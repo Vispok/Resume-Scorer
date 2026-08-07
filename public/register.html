@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <link
+        rel="stylesheet"
+        href="login.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-tabs">
+
+        <button
+            type="button"
+            class="tab-btn"
+            onclick="window.location.href='login.html'">
+
+            Login
+
+        </button>
+
+        <button
+            type="button"
+            class="tab-btn active">
+
+            Register
+
+        </button>
+
+    </div>
+
+
+    <h2>Register</h2>
+
+
+    <div class="input-box">
+
+        <label>
+            Email / Phone Number
+        </label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter Email or Phone">
+
+    </div>
+
+
+    <div class="input-box">
+
+        <label>
+            Select User Type
+        </label>
+
+        <select id="userType">
+
+            <option value="">
+                -- Select User Type --
+            </option>
+
+            <option value="recruiter">
+                Recruiter
+            </option>
+
+            <option value="candidate">
+                Candidate
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="input-box password-box">
+
+        <label>
+            New Password
+        </label>
+
+        <input
+            type="password"
+            id="newPassword"
+            placeholder="Enter New Password">
+
+        <button
+            type="button"
+            onclick="togglePassword('newPassword', this)">
+
+            Show
+
+        </button>
+
+    </div>
+
+
+    <div class="input-box password-box">
+
+        <label>
+            Confirm Password
+        </label>
+
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm Password">
+
+        <button
+            type="button"
+            onclick="togglePassword('confirmPassword', this)">
+
+            Show
+
+        </button>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="auth-btn register-btn"
+        onclick="registerUser()">
+
+        Register
+
+    </button>
+
+
+    <p id="message"></p>
+
+</div>
+
+
+<script>
+
+const emailPattern =
+/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+const phonePattern =
+/^[6-9]\d{9}$/;
+
+
+const passwordPattern =
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+
+
+function togglePassword(id, btn) {
+
+    const field =
+        document.getElementById(id);
+
+
+    if (field.type === "password") {
+
+        field.type = "text";
+
+        btn.innerHTML = "Hide";
+
+    }
+
+    else {
+
+        field.type = "password";
+
+        btn.innerHTML = "Show";
+
+    }
+
+}
+
+
+
+async function registerUser() {
+
+
+    const username =
+        document
+        .getElementById("username")
+        .value
+        .trim();
+
+
+    const role =
+        document
+        .getElementById("userType")
+        .value;
+
+
+    const password =
+        document
+        .getElementById("newPassword")
+        .value;
+
+
+    const confirmPassword =
+        document
+        .getElementById("confirmPassword")
+        .value;
+
+
+    const msg =
+        document
+        .getElementById("message");
+
+
+
+    if (
+        username === "" ||
+        role === "" ||
+        password === "" ||
+        confirmPassword === ""
+    ) {
+
+        msg.className = "error";
+
+        msg.innerHTML =
+            "Please fill all fields.";
+
+        return;
+
+    }
+
+
+
+    if (
+        !emailPattern.test(username) &&
+        !phonePattern.test(username)
+    ) {
+
+        msg.className = "error";
+
+        msg.innerHTML =
+            "Enter valid Email or Phone Number.";
+
+        return;
+
+    }
+
+
+
+    if (!passwordPattern.test(password)) {
+
+        msg.className = "error";
+
+        msg.innerHTML =
+            "Password must contain uppercase, lowercase, number, special character and minimum 8 characters.";
+
+        return;
+
+    }
+
+
+
+    if (password !== confirmPassword) {
+
+        msg.className = "error";
+
+        msg.innerHTML =
+            "Passwords do not match.";
+
+        return;
+
+    }
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/api/register",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            username,
+
+                            role,
+
+                            password,
+
+                            confirmPassword
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+
+        if (!response.ok) {
+
+            msg.className = "error";
+
+            msg.innerHTML =
+                data.message;
+
+            return;
+
+        }
+
+
+
+        msg.className =
+            "success";
+
+
+        msg.innerHTML =
+            "Registration Successful!";
+
+
+        setTimeout(
+            function () {
+
+                window.location.href =
+                    "login.html";
+
+            },
+
+            1000
+        );
+
+
+    }
+
+    catch (error) {
+
+        msg.className =
+            "error";
+
+        msg.innerHTML =
+            "Server connection failed.";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

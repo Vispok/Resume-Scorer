@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>User Details</title>
+
+    <link
+        rel="stylesheet"
+        href="userdata.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<form
+    class="user-form"
+    id="userForm">
+
+
+<h2>User Information</h2>
+
+
+<div class="input-box">
+
+    <label for="name">
+        Full Name
+    </label>
+
+    <input
+        type="text"
+        id="name"
+        minlength="3"
+        maxlength="100"
+        required>
+
+</div>
+
+
+<div class="input-box">
+
+    <label for="email">
+        Email Address
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        required>
+
+</div>
+
+
+<div class="input-box">
+
+    <label for="phone">
+        Phone Number
+    </label>
+
+    <input
+        type="tel"
+        id="phone"
+        pattern="[6-9][0-9]{9}"
+        maxlength="10"
+        required>
+
+</div>
+
+
+<div class="input-box">
+
+
+<label>Gender</label>
+
+
+<div class="gender-box">
+
+
+<label>
+
+<input
+    type="radio"
+    name="gender"
+    value="Male"
+    required>
+
+Male
+
+</label>
+
+
+<label>
+
+<input
+    type="radio"
+    name="gender"
+    value="Female">
+
+Female
+
+</label>
+
+
+<label>
+
+<input
+    type="radio"
+    name="gender"
+    value="Other">
+
+Other
+
+</label>
+
+
+</div>
+
+</div>
+
+
+<div class="input-box">
+
+<label for="dob">
+
+Date of Birth
+
+</label>
+
+
+<input
+    type="date"
+    id="dob"
+    required>
+
+</div>
+
+
+<button type="submit">
+
+Submit
+
+</button>
+
+
+<p id="message"></p>
+
+
+</form>
+
+
+</div>
+
+
+<script>
+
+
+document
+.getElementById("userForm")
+.addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+        const gender =
+            document
+            .querySelector(
+                'input[name="gender"]:checked'
+            )
+            ?.value;
+
+
+        const userData = {
+
+            name:
+                document
+                .getElementById("name")
+                .value
+                .trim(),
+
+            email:
+                document
+                .getElementById("email")
+                .value
+                .trim(),
+
+            phone:
+                document
+                .getElementById("phone")
+                .value
+                .trim(),
+
+            gender:
+
+                gender,
+
+            dob:
+                document
+                .getElementById("dob")
+                .value
+
+        };
+
+
+        const msg =
+            document
+            .getElementById(
+                "message"
+            );
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/api/userdata",
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                userData
+                            )
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+
+            if (
+                response.status ===
+                401
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+
+            if (!response.ok) {
+
+                msg.className =
+                    "error";
+
+                msg.innerHTML =
+                    data.message;
+
+                return;
+
+            }
+
+
+
+            msg.className =
+                "success";
+
+
+            msg.innerHTML =
+                "Information saved.";
+
+
+
+            window.location.href =
+                data.redirect;
+
+
+        }
+
+        catch (error) {
+
+
+            msg.className =
+                "error";
+
+
+            msg.innerHTML =
+                "Server connection failed.";
+
+
+        }
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
